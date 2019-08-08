@@ -11,7 +11,7 @@ public class Hero {
     private float x;
     private float y;
     private float speed;
-    private float hp, hpMax;
+    private float  hp, hpMax;
 
     public float getX() {
         return x;

@@ -11,9 +11,7 @@ public class Monster {
     private float y;
     private float speed;
     private float activityRadius;
-    private MyGdxGame game;
-
-    //private float dirX, dirY;
+    private GameScreen gameScreen;
 
     public float getX() {
         return x;
@@ -23,13 +21,13 @@ public class Monster {
         return y;
     }
 
-    public Monster(MyGdxGame game){
+    public Monster(GameScreen gameScreen){
         this.texture = new Texture("Skeleton.png");
         this.x = 200.0f;
         this.y = 200.0f;
         this.speed = 40.0f;
         this.activityRadius = 300.0f;
-        this.game = game;
+        this.gameScreen = gameScreen;
     }
 
     public void render(SpriteBatch batch){
@@ -37,14 +35,14 @@ public class Monster {
     }
 
     public void update(float dt) {
-        float dst = (float) Math.sqrt((game.getHero().getX() - this.x) * (game.getHero().getX() - this.x) + (game.getHero().getY()- this.y) * (game.getHero().getY()- this.y));
+        float dst = (float) Math.sqrt((gameScreen.getHero().getX() - this.x) * (gameScreen.getHero().getX() - this.x) + (gameScreen.getHero().getY()- this.y) * (gameScreen.getHero().getY()- this.y));
         if (dst <= activityRadius) {
-            if (x < game.getHero().getX()) {
+            if (x < gameScreen.getHero().getX()) {
                 x += speed * dt;
             } else {
                 x -= speed * dt;
             }
-            if (y < game.getHero().getY()) {
+            if (y < gameScreen.getHero().getY()) {
                 y += speed * dt;
             } else {
                 y -= speed * dt;

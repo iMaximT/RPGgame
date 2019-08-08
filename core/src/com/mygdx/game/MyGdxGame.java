@@ -8,11 +8,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class MyGdxGame extends ApplicationAdapter {
 	SpriteBatch batch;
-	private Hero hero;
-	private Monster monster;
+	private GameScreen gameScreen;
 	//Texture img;
 
-
+/*
 	public Hero getHero() {
 		return hero;
 	}
@@ -20,39 +19,21 @@ public class MyGdxGame extends ApplicationAdapter {
 	public Monster getMonster() {
 		return monster;
 	}
+*/
 
 	@Override
 	public void create () {
-		batch = new SpriteBatch();
+		this.batch = new SpriteBatch();
+		this.gameScreen = new GameScreen(batch);
+		this.gameScreen.create();
 		//img = new Texture("Knight.png");
-		hero = new Hero(); //36m
-		monster = new Monster(this);
 	}
 
 	@Override
 	public void render () {
-		float dt = Gdx.graphics.getDeltaTime();
-		update(dt);
-		Gdx.gl.glClearColor(0, 0.5f, 0.5f, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		batch.begin();
-		hero.render(batch);
-		monster.render(batch);
-		/*batch.draw(img, 0, 0);
-		batch.draw(img, 100, 0);
-		*/
-		batch.end();
+		gameScreen.render();
 	}
 
-	public void update (float dt) {
-		hero.update(dt);
-		monster.update(dt);
-		float dst = (float) Math.sqrt((hero.getX() - monster.getX()) * (hero.getX() - monster.getX()) + (hero.getY()- monster.getY()) * (hero.getY()- monster.getY()));
-		if (dst < 40.0f) {
-			hero.takeDamage(dt * 10.0f);
-		}
-
-	}
 
 		@Override
 	public void dispose () {
