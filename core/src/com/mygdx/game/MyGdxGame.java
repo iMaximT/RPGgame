@@ -24,9 +24,9 @@ public class MyGdxGame extends ApplicationAdapter {
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
+		//img = new Texture("Knight.png");
 		hero = new Hero(); //36m
 		monster = new Monster(this);
-		//img = new Texture("Knight.png");
 	}
 
 	@Override
@@ -47,10 +47,12 @@ public class MyGdxGame extends ApplicationAdapter {
 	public void update (float dt) {
 		hero.update(dt);
 		monster.update(dt);
+		float dst = (float) Math.sqrt((hero.getX() - monster.getX()) * (hero.getX() - monster.getX()) + (hero.getY()- monster.getY()) * (hero.getY()- monster.getY()));
+		if (dst < 40.0f) {
+			hero.takeDamage(dt * 10.0f);
+		}
 
 	}
-
-
 
 		@Override
 	public void dispose () {
