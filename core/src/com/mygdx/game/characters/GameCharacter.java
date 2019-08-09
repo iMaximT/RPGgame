@@ -36,7 +36,15 @@ public abstract class GameCharacter {
           if (position.y < 0.0f) {
                position.y = 0.0f;
           }
-
-
      }
+
+    public void takeDamage(float amount) {
+        hp -= amount;
+        damageEffectTimer += 0.5f;
+        if(damageEffectTimer > 1.0f){
+            damageEffectTimer = 1.0f;
+        }
+    }
+
+
 }

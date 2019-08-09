@@ -32,15 +32,6 @@ public class Hero extends GameCharacter{
         batch.draw(textureHp, position.x - 40, position.y + 80 - 40, 0 , 0, hp/hpMax * 80,12,1,1,0,0,0,80, 20, false, false);
         batch.setColor(1,1,1,1);
     }
-
-    public void takeDamage(float amount) {
-        hp -= amount;
-        damageEffectTimer += 0.5f;
-        if(damageEffectTimer > 1.0f){
-            damageEffectTimer = 1.0f;
-        }
-    }
-
     @Override
     public void update(float dt) {
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
