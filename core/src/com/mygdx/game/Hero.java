@@ -25,7 +25,7 @@ public class Hero {
         texture = new Texture("Knight.png");
         textureHp = new Texture("Bar.png");
         x = 200.0f;
-        y = 200.0f;
+        y = 360.0f;
         hpMax = 100.0f;
         hp = hpMax;
         speed = 100.0f;

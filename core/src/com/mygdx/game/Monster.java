@@ -23,10 +23,10 @@ public class Monster {
 
     public Monster(GameScreen gameScreen){
         this.texture = new Texture("Skeleton.png");
-        this.x = 200.0f;
+        this.x = 1080.0f;
         this.y = 200.0f;
         this.speed = 40.0f;
-        this.activityRadius = 300.0f;
+        this.activityRadius = 200.0f;
         this.gameScreen = gameScreen;
     }
 
