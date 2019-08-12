@@ -14,14 +14,29 @@ public abstract class GameCharacter {
      float speed;
      float  hp, hpMax;
      float damageEffectTimer;
+     float attackTimer;
 
-     public Vector2 getPosition() {
+    Weapon weapon;
+
+    public Vector2 getPosition() {
           return position;
      }
 
      public abstract void update(float dt);
 
-     public abstract void render (SpriteBatch batch);
+     public void render (SpriteBatch batch) {
+         if(damageEffectTimer > 0.0f) {
+             batch.setColor(1,1- damageEffectTimer, 1-damageEffectTimer, 1);
+         }
+         batch.draw(texture, position.x - 40, position.y - 40);
+         batch.setColor(0,0,0,1);
+
+         batch.draw(textureHp, position.x - 42, position.y + 80 - 42, 84, 16);//0 , 0, hp,20,1,1,0,0,0,80, 20, false, false);
+         batch.setColor(1,0,0,1);
+         batch.draw(textureHp, position.x - 40, position.y + 80 - 40, 0 , 0, hp/hpMax * 80,12,1,1,0,0,0,80, 20, false, false);
+         batch.setColor(1,1,1,1);
+
+     };
 
      public void checkScreenBounds() {
           if (position.x > 1280.0f) {

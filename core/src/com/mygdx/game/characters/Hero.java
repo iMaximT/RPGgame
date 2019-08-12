@@ -5,35 +5,37 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.mygdx.game.GameScreen;
 
 import java.util.Vector;
 
 public class Hero extends GameCharacter{
 
-    public Hero(){
-        texture = new Texture("Knight.png");
-        textureHp = new Texture("Bar.png");
-        position = new Vector2(200, 200);
-        hpMax = 100.0f;
-        hp = hpMax;
-        speed = 100.0f;
+
+    public Hero(GameScreen gameScreen){
+        this.gameScreen = gameScreen;
+        this.texture = new Texture("Knight.png");
+        this.textureHp = new Texture("Bar.png");
+        this.position = new Vector2(200, 200);
+        this.hpMax = 100.0f;
+        this.hp = this.hpMax;
+        this.speed = 100.0f;
+        this.weapon = new Weapon("Sword", 50.0f, 0.5f, 4.0f);
     }
 
-    @Override
-    public void render(SpriteBatch batch){
-        if(damageEffectTimer > 0.0f) {
-            batch.setColor(1,1- damageEffectTimer, 1-damageEffectTimer, 1);
-        }
-        batch.draw(texture, position.x - 40, position.y - 40);
-        batch.setColor(0,0,0,1);
-
-        batch.draw(textureHp, position.x - 42, position.y + 80 - 42, 84, 16);//0 , 0, hp,20,1,1,0,0,0,80, 20, false, false);
-        batch.setColor(1,0,0,1);
-        batch.draw(textureHp, position.x - 40, position.y + 80 - 40, 0 , 0, hp/hpMax * 80,12,1,1,0,0,0,80, 20, false, false);
-        batch.setColor(1,1,1,1);
-    }
     @Override
     public void update(float dt) {
+        damageEffectTimer -= dt;
+
+        float dst = gameScreen.getHero().getPosition().dst(this.position);
+        if (dst < weapon.getAttackRadius()) {
+            attackTimer += dt;
+            if(attackTimer> weapon.getAttackPeriod()){
+                attackTimer = 0.0f;
+                gameScreen.getMonster().takeDamage(weapon.getDamage());
+            }
+        }
+
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
             position.x += speed * dt;
         }

@@ -24,7 +24,7 @@ public class GameScreen {
     }
 
     public void create() {
-        hero = new Hero();
+        hero = new Hero(this);
         monster = new Monster(this);
     }
 
