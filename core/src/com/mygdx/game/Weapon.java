@@ -1,10 +1,14 @@
-package com.mygdx.game.characters;
+package com.mygdx.game;
 
 public class Weapon {
     private String name;
     private float attackRadius;
     private float attackPeriod;
     private float damage;
+
+    public String getName() {
+        return name;
+    }
 
     public float getAttackRadius() {
         return attackRadius;
