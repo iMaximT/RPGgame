@@ -12,6 +12,7 @@ import com.mygdx.game.Item;
 import com.mygdx.game.Weapon;
 
 public class Hero extends GameCharacter{
+    private String name;
     private int coins;
     private int level;
     private int exp;
@@ -20,6 +21,7 @@ public class Hero extends GameCharacter{
 
     public Hero(GameScreen gameScreen){
         this.gameScreen = gameScreen;
+        this.name = "Dennis";
         this.level = 1;
         this.texture = new Texture("Knight.png");
         this.textureHp = new Texture("Bar.png");
@@ -27,7 +29,6 @@ public class Hero extends GameCharacter{
         while (!gameScreen.getMap().isCellPassable(position)) {
             this.position.set(MathUtils.random(0, 1280), MathUtils.random(0, 720));
         }
-        this.temp = new Vector2(0, 0);
         this.direction = new Vector2(0, 0);
         this.hpMax = 100.0f;
         this.hp = this.hpMax;
@@ -38,7 +39,12 @@ public class Hero extends GameCharacter{
     }
 
     public void renderHUD(SpriteBatch batch, BitmapFont font24) {
-        font24.draw(batch, "Knight: Alexander\nLevel: " + level + "\nExp: " + exp + " / " + expTo[level + 1] + "\nCoins: " + coins, 20, 700);
+        stringHelper.setLength(0);
+        stringHelper.append("Knight: ").append(name).append("\n")
+                .append("Level: ").append(level).append("\n")
+                .append("Exp: ").append(exp).append(" / ").append(expTo[level + 1]).append("\n")
+                .append("Coin: ").append(coins);
+        font24.draw(batch,  stringHelper, 20, 700);
     }
 
     @Override
@@ -81,10 +87,7 @@ public class Hero extends GameCharacter{
             direction.y = -1.0f;
         }
 
-        temp.set(position).mulAdd(direction, speed * dt);
-        if (gameScreen.getMap().isCellPassable(temp)) {
-            position.set(temp);
-        }
+        moveForward(dt);
 
         checkScreenBounds();
 
@@ -102,7 +105,20 @@ public class Hero extends GameCharacter{
     public void useItem(Item it) {
         switch (it.getType()) {
             case COINS:
-                coins += MathUtils.random(3, 5);
+                int amount = MathUtils.random(3, 5);
+                coins += amount;
+                stringHelper.setLength(0);
+                stringHelper.append("coins + ").append(amount);
+                gameScreen.getTextEmitter().setup(it.getPosition().x, it.getPosition().y, stringHelper);
+                break;
+            case MEDKIT:
+                hp += 5;
+                if(hp>hpMax) {
+                    hp = hpMax;
+                }
+                stringHelper.setLength(0);
+                stringHelper.append("hp + ").append(5);
+                gameScreen.getTextEmitter().setup(it.getPosition().x, it.getPosition().y, stringHelper);
                 break;
         }
         it.deactivate();

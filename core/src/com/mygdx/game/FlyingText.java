@@ -3,20 +3,11 @@ package com.mygdx.game;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
-public class Item {
-    public enum Type {
-        COINS(0), MEDKIT(1);
-
-        int index;
-
-        Type(int index) {
-            this.index = index;
-        }
-    }
+public class FlyingText {
 
     private Vector2 position;
     private Vector2 velocity;
-    private Type type;
+    private StringBuilder text;
     private float time;
     private float timeMax;
     private boolean active;
@@ -33,23 +24,24 @@ public class Item {
         return position;
     }
 
-    public Type getType() {
-        return type;
+    public StringBuilder getText() {
+        return text;
     }
 
-    public Item() {
+    public FlyingText() {
         this.position = new Vector2(0, 0);
         this.velocity = new Vector2(0, 0);
-        this.type = Type.COINS;
+        this.text = new StringBuilder();
         this.timeMax = 5.0f;
         this.time = 0.0f;
         this.active = false;
     }
 
-    public void setup(float x, float y, Type type) {
+    public void setup(float x, float y, StringBuilder text) {
         this.position.set(x, y);
-        this.velocity.set(MathUtils.random(-50, 50), MathUtils.random(-50, 50));
-        this.type = type;
+        this.velocity.set(10, 40);
+        this.text.setLength(0);
+        this.text.append(text);
         this.time = 0.0f;
         this.active = true;
     }
@@ -62,3 +54,4 @@ public class Item {
         }
     }
 }
+

@@ -22,6 +22,7 @@ public abstract class GameCharacter {
      float attackTimer;
 
     Weapon weapon;
+    StringBuilder stringHelper;
 
     public boolean isAlive() {
         return hp > 0;
@@ -31,9 +32,14 @@ public abstract class GameCharacter {
           return position;
      }
 
-     public abstract void update(float dt);
+    public abstract void update(float dt);
 
-     public void render (SpriteBatch batch, BitmapFont font24) {
+    public GameCharacter() {
+        temp = new Vector2(0,0);
+        stringHelper = new StringBuilder();
+    }
+
+    public void render (SpriteBatch batch, BitmapFont font24) {
          if(damageEffectTimer > 0.0f) {
              batch.setColor(1,1- damageEffectTimer, 1-damageEffectTimer, 1);
          }
@@ -45,11 +51,13 @@ public abstract class GameCharacter {
          batch.setColor(1,0,0,1);
          batch.draw(textureHp, position.x - 40, position.y + 80 - 40, 0 , 0, hp/hpMax * 80,12,1,1,0,0,0,80, 20, false, false);
          batch.setColor(1,1,1,1);
+         stringHelper.setLength(0);
+         stringHelper.append((int)hp);
          font24.draw(batch, String.valueOf((int) hp), position.x - 40, position.y + 80 -22, 80, 1, false);
 
      };
 
-     public void checkScreenBounds() {
+    public void checkScreenBounds() {
           if (position.x > 1280.0f) {
                position.x = 1280.0f;
           }
@@ -72,5 +80,14 @@ public abstract class GameCharacter {
         }
     }
 
+    public void moveForward(float dt) {
+         if (gameScreen.getMap().isCellPassable(temp.set(position).mulAdd(direction, speed * dt))) {
+            position.set(temp);
+         } else if (gameScreen.getMap().isCellPassable(temp.set(position).mulAdd(direction, speed * dt).set(temp.x, position.y))) {
+             position.set(temp);
+         } else if (gameScreen.getMap().isCellPassable(temp.set(position).mulAdd(direction, speed * dt).set(position.x, temp.y))) {
+             position.set(temp);
+         }
 
+    }
 }

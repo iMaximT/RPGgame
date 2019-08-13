@@ -16,6 +16,7 @@ public class GameScreen {
     private BitmapFont font24;
     private Map map;
     private ItemsEmitter itemsEmitter;
+    private TextEmitter textEmitter;
     private Hero hero;
 
     private List<GameCharacter> allCharacters;
@@ -35,6 +36,10 @@ public class GameScreen {
         return hero;
     }
 
+    public TextEmitter getTextEmitter() {
+        return textEmitter;
+    }
+
     public GameScreen(SpriteBatch batch) {
         this.batch = batch;
     }
@@ -45,6 +50,7 @@ public class GameScreen {
         allMonsters = new ArrayList<>();
         hero = new Hero(this);
         itemsEmitter = new ItemsEmitter();
+        textEmitter = new TextEmitter();
         allCharacters.addAll(Arrays.asList(
                 hero,
                 new Monster(this),
@@ -81,6 +87,7 @@ public class GameScreen {
             allCharacters.get(i).render(batch, font24);
         }
         itemsEmitter.render(batch);
+        textEmitter.render(batch, font24);
         hero.renderHUD(batch, font24);
         batch.end();
     }
@@ -108,5 +115,6 @@ public class GameScreen {
             }
         }
         itemsEmitter.update(dt);
+        textEmitter.update(dt);
     }
 }
