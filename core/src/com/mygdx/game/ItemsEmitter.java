@@ -10,9 +10,7 @@ public class ItemsEmitter {
     private Texture texture;
     private TextureRegion[] regions;
 
-    public Item[] getItems() {
-        return items;
-    }
+    public Item[] getItems() {        return items;    }
 
     public ItemsEmitter() {
         items = new Item[50];
