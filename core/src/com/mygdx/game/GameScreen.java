@@ -5,6 +5,13 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.Event;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.mygdx.game.characters.GameCharacter;
 import com.mygdx.game.characters.Hero;
 import com.mygdx.game.characters.Monster;
@@ -13,12 +20,14 @@ import java.util.*;
 
 public class GameScreen {
     private SpriteBatch batch;
+    private Stage stage;
     private BitmapFont font24;
     private Map map;
     private ItemsEmitter itemsEmitter;
     private TextEmitter textEmitter;
     private Hero hero;
 
+    private boolean paused;
     private List<GameCharacter> allCharacters;
     private List<Monster> allMonsters;
 
@@ -66,6 +75,23 @@ public class GameScreen {
             }
         }
         font24 = new BitmapFont(Gdx.files.internal("font24.fnt"));
+        stage = new Stage();
+
+        Skin skin  = new Skin();
+        skin.add("simpleButton", new Texture("SimpleButton.png"));
+
+        TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
+        textButtonStyle.up = skin.getDrawable("simpleButton");
+        textButtonStyle.font = font24;
+        TextButton textButton = new TextButton("Pause", textButtonStyle);
+        textButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                paused = !paused;
+            }
+        });
+        stage.addActor(textButton);
+        Gdx.input.setInputProcessor(stage);
 
         drawOrderComparator = new Comparator<GameCharacter>() {
             @Override
@@ -90,31 +116,35 @@ public class GameScreen {
         textEmitter.render(batch, font24);
         hero.renderHUD(batch, font24);
         batch.end();
+        stage.draw();
     }
 
     public void update(float dt) {
-        for (int i = 0; i < allCharacters.size(); i++) {
-            allCharacters.get(i).update(dt);
-        }
-        for (int i = 0; i < allMonsters.size(); i++) {
-            Monster currentsMonster = allMonsters.get(i);
-            if (!currentsMonster.isAlive()) {
-                allMonsters.remove(currentsMonster);
-                allCharacters.remove(currentsMonster);
-                itemsEmitter.generateRandomItem(currentsMonster.getPosition().x, currentsMonster.getPosition().y, 5, 0.6f);
-                hero.killMonster(currentsMonster);
+        if(!paused) {
+            for (int i = 0; i < allCharacters.size(); i++) {
+                allCharacters.get(i).update(dt);
             }
-        }
-        for (int i = 0; i < itemsEmitter.getItems().length; i++) {
-            Item it = itemsEmitter.getItems()[i];
-            if (it.isActive()) {
-                float dst = hero.getPosition().dst(it.getPosition());
-                if (dst < 24.0f) {
-                    hero.useItem(it);
+            for (int i = 0; i < allMonsters.size(); i++) {
+                Monster currentsMonster = allMonsters.get(i);
+                if (!currentsMonster.isAlive()) {
+                    allMonsters.remove(currentsMonster);
+                    allCharacters.remove(currentsMonster);
+                    itemsEmitter.generateRandomItem(currentsMonster.getPosition().x, currentsMonster.getPosition().y, 5, 0.6f);
+                    hero.killMonster(currentsMonster);
                 }
             }
+            for (int i = 0; i < itemsEmitter.getItems().length; i++) {
+                Item it = itemsEmitter.getItems()[i];
+                if (it.isActive()) {
+                    float dst = hero.getPosition().dst(it.getPosition());
+                    if (dst < 24.0f) {
+                        hero.useItem(it);
+                    }
+                }
+            }
+            itemsEmitter.update(dt);
+            textEmitter.update(dt);
         }
-        itemsEmitter.update(dt);
-        textEmitter.update(dt);
+        stage.act(dt);
     }
 }
