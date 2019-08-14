@@ -5,10 +5,8 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.Event;
+import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -83,14 +81,28 @@ public class GameScreen {
         TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
         textButtonStyle.up = skin.getDrawable("simpleButton");
         textButtonStyle.font = font24;
-        TextButton textButton = new TextButton("Pause", textButtonStyle);
-        textButton.addListener(new ClickListener() {
+        TextButton pauseButton = new TextButton("Pause", textButtonStyle);
+        TextButton exitButton = new TextButton("Exit", textButtonStyle);
+        pauseButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 paused = !paused;
             }
         });
-        stage.addActor(textButton);
+        exitButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Gdx.app.exit();
+            }
+        });
+        Group menuGroup = new Group();
+        menuGroup.addActor(pauseButton);
+        menuGroup.addActor(exitButton);
+        exitButton.setPosition(150, 0);
+        menuGroup.setPosition(980, 680);
+        //menuGroup.setVisible(false);
+
+        stage.addActor(menuGroup);
         Gdx.input.setInputProcessor(stage);
 
         drawOrderComparator = new Comparator<GameCharacter>() {
